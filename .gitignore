@@ -1,0 +1,37 @@
+# common
+**/.DS_Store
+**/.idea
+
+# node dependencies
+**/node_modules
+**/npm-debug.log
+
+# Terraform
+.terraform
+*.tfstate*backup
+
+# others
+.eslintcache
+**/local.env
+**/.nyc_output
+stats.json
+
+.tmp
+.next
+dist
+coverage
+
+.awspublish-*
+e2e/fixtures/mongo/combined
+e2e/fixtures/postgres/combined
+test/concurrency/results/*.json
+translation.missing.json
+*.un~
+.*.swp
+.*.swo
+.v8flags*
+flow-typed/npm
+local.env
+.env.dev
+
+data/

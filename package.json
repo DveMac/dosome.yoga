@@ -1,0 +1,28 @@
+{
+  "name": "10minuteyoga",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "google-auth-library": "^6.0.0",
+    "googleapis": "^51.0.0",
+    "mongodb": "^3.5.7",
+    "node-fetch": "^2.6.0",
+    "qs": "^6.9.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4",
+    "prettier": "^2.0.5",
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^7.0.4",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.9.3"
+  },
+  "description": ""
+}
