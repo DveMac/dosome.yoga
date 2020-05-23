@@ -1,0 +1,17 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended", "tslint-jest"],
+  "jsRules": {},
+  "rules": {
+    "no-alias-methods": true,
+    "curly": [true, "ignore-same-line"],
+    "semicolon": [false],
+    "max-line-length": [true, 120],
+    "arrow-parens": [false],
+    "ordered-imports": true,
+    "object-literal-sort-keys": [false],
+    "no-angle-bracket-type-assertion": false,
+    "no-console": false
+  },
+  "rulesDirectory": []
+}

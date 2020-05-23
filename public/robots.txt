@@ -1,0 +1,6 @@
+Sitemap: https://www.dosome.yoga/sitemap.xml
+
+User-agent: *
+Allow: /*
+
+Disallow: /api/*

@@ -1,0 +1,23 @@
+{
+  "env": {
+    "DB_HOST": "@dbhost",
+    "DB_PASSWORD": "@dbpassword",
+    "DB_USERNAME": "@dbuser",
+    "DB_PORT": "@dbport",
+    "DB_DATABASE": "@dbname"
+  },
+  "routes": [
+    {
+      "src": "/.*",
+      "headers": {
+        "Content-Security-Policy": "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; default-src 'self'; img-src 'self' https://i.ytimg.com https://*.goatcounter.com; script-src 'unsafe-eval' 'self' https://gc.zgo.at http://www.youtube.com/ https://s.ytimg.com/yts/jsbin/; frame-src 'self' https://www.youtube-nocookie.com",
+        "Feature-Policy": "'none'",
+        "Referrer-Policy": "same-origin",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "deny",
+        "X-XSS-Protection": "1"
+      },
+      "continue": true
+    }
+  ]
+}

@@ -1,28 +1,63 @@
 {
-  "name": "10minuteyoga",
+  "name": "yoga",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "db-up": "docker-compose -f docker-compose.local.yml up --build",
+    "db-down": "docker-compose -f docker-compose.local.yml down --remove-orphans"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@types/react": "^16.9.35",
-    "@types/react-dom": "^16.9.8",
-    "google-auth-library": "^6.0.0",
-    "googleapis": "^51.0.0",
-    "mongodb": "^3.5.7",
+    "@chakra-ui/core": "^0.8.0",
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
+    "bunyan": "^1.8.12",
+    "cross-env": "^7.0.2",
+    "emotion-theming": "^10.0.27",
+    "knex": "^0.21.1",
+    "next": "9.4.4",
     "node-fetch": "^2.6.0",
-    "qs": "^6.9.4"
+    "jdenticon": "^2.2.0",
+    "nprogress": "^0.2.0",
+    "pg": "^8.2.1",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-icons": "^3.10.0",
+    "react-lazy-load-image-component": "^1.5.0",
+    "react-youtube": "^7.11.2",
+    "request-ip": "^2.1.3",
+    "sitemap": "^6.1.6",
+    "use-http": "^1.0.12",
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4",
+    "@types/node-fetch": "^2.5.7",
+    "@types/pg": "^7.14.3",
+    "@types/qs": "^6.9.3",
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "@types/youtube": "0.0.39",
+    "husky": "^4.2.5",
+    "jest": "^24.9.0",
+    "lint-staged": "^10.2.11",
+    "node-sass": "^4.14.1",
     "prettier": "^2.0.5",
-    "source-map-loader": "^0.2.4",
-    "ts-loader": "^7.0.4",
+    "prettier-plugin-organize-imports": "^1.0.4",
+    "ts-jest": "^24.3.0",
     "ts-node": "^8.10.1",
+    "tslint": "^6.1.2",
+    "tslint-jest": "^1.0.5",
     "typescript": "^3.9.3"
   },
-  "description": ""
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,css,md}": "prettier --write",
+    "*.{ts,tsx}": "tslint --fix"
+  }
 }

@@ -21,17 +21,6 @@ stats.json
 dist
 coverage
 
-.awspublish-*
-e2e/fixtures/mongo/combined
-e2e/fixtures/postgres/combined
-test/concurrency/results/*.json
-translation.missing.json
-*.un~
-.*.swp
-.*.swo
-.v8flags*
-flow-typed/npm
-local.env
-.env.dev
+.env
 
-data/
+.vercel
