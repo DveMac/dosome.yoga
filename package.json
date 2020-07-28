@@ -1,6 +1,6 @@
 {
   "name": "yoga",
-  "version": "1.0.0",
+  "version": "0.9.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -13,13 +13,12 @@
     "@chakra-ui/core": "^0.8.0",
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
-    "bunyan": "^1.8.12",
     "cross-env": "^7.0.2",
     "emotion-theming": "^10.0.27",
+    "jdenticon": "^2.2.0",
     "knex": "^0.21.1",
     "next": "9.4.4",
     "node-fetch": "^2.6.0",
-    "jdenticon": "^2.2.0",
     "nprogress": "^0.2.0",
     "pg": "^8.2.1",
     "react": "16.13.1",
@@ -27,15 +26,12 @@
     "react-icons": "^3.10.0",
     "react-lazy-load-image-component": "^1.5.0",
     "react-youtube": "^7.11.2",
-    "request-ip": "^2.1.3",
     "sitemap": "^6.1.6",
-    "use-http": "^1.0.12",
-    "uuid": "^8.1.0"
+    "use-http": "^1.0.12"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.7",
     "@types/pg": "^7.14.3",
-    "@types/qs": "^6.9.3",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@types/youtube": "0.0.39",
