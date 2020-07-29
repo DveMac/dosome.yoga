@@ -6,6 +6,10 @@ The production app is available at [https://www.dosome.yoga](https://www.dosome.
 
 The application is built on [Next.js](https://nextjs.org/) and written in [Typescript](https://www.typescriptlang.org/). The production environment runs on [Vercel](https://vercel.com). The data store is [postgres](https://www.postgresql.org/docs/).
 
+### Design
+
+From the start the project has aimed to be ultra-low friction and privacy conscious, as such there is no login or account system and no user information is collected. Any user specific configuration is stored in the browser localStorage (when possible). Basic visitor analytic data is collected using [goatcounter](https://www.goatcounter.com/) and is publicly accessible [here](https://dosomeyoga10.goatcounter.com/).
+
 ### Local Development
 
 This repo includes the database schema and sample seed data. To run the local environment you will need [Docker](https://www.docker.com/get-started).
