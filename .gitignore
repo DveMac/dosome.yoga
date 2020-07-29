@@ -6,21 +6,12 @@
 **/node_modules
 **/npm-debug.log
 
-# Terraform
-.terraform
-*.tfstate*backup
-
 # others
 .eslintcache
-**/local.env
-**/.nyc_output
-stats.json
+.env
 
 .tmp
 .next
+.vercel
 dist
 coverage
-
-.env
-
-.vercel
