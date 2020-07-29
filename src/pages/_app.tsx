@@ -32,7 +32,8 @@ export default function MyApp({ Component, pageProps }) {
               <a href="https://twitter.com/dosome_yoga" target="_blank" rel="noopener noreferrer">
                 @dosome_yoga
               </a>{' '}
-              | Made for you in 2020
+              | Contribute on <a href="https://github.com/DveMac/dosome.yoga">GitHub</a> | Made in 2020, an incredibly
+              strange year.
             </small>
           </footer>
         </ContentBox>
