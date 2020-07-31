@@ -123,6 +123,6 @@ export const OFFSET = 4;
 export const APP_NAME = 'Yoga';
 export const APP_VERSION = 1;
 export const COMPLETE_PERC = 0.9;
-export const MAIN_PADDING = [4, 8, 12];
+export const MAIN_PADDING = [8, 8, 12];
 export const HALF_PADDING = [2, 4, 6];
 export const TIME_INTERVALS = [5, 10, 15, 20, 25, 30, 35, 40, 35, 55, 60];
