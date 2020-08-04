@@ -9,12 +9,19 @@ const Header: React.FC = ({}) => {
   return (
     <Box borderBottom="1px" borderColor="gray.200">
       <ContentBox>
-        <Stack justifyContent="space-between" alignContent="center" isInline>
-          <Heading as="h1" size={'lg'}>
-            <Link href="/">
-              <a>{APP_NAME}</a>
-            </Link>
-          </Heading>
+        <Stack justifyContent="space-between" alignContent="center" alignItems="center" isInline>
+          <Flex>
+            <Heading as="h1" size={'lg'}>
+              <Link href="/">
+                <a>{APP_NAME}</a>
+              </Link>
+            </Heading>
+            <Flex alignItems="">
+              {'  '}
+              <small>beta</small>
+            </Flex>
+          </Flex>
+
           <Flex>
             <Box marginRight={[4, 6, 8]}>
               <Link href="/practice">
