@@ -196,7 +196,7 @@ CREATE MATERIALIZED VIEW public.videos_view AS
     json_build_object('default', (((v.snippet -> 'thumbnails'::text) -> 'default'::text) ->> 'url'::text), 'medium', (((v.snippet -> 'thumbnails'::text) -> 'medium'::text) ->> 'url'::text), 'high', (((v.snippet -> 'thumbnails'::text) -> 'high'::text) ->> 'url'::text)) AS images,
     ((v.statistics ->> 'likeCount'::text))::integer AS like_count,
     ((v.statistics ->> 'viewCount'::text))::integer AS view_count,
-    ("substring"((v.content_details ->> 'duration'::text), 'PT(\d+)M.*'::text))::integer AS duration,
+    ((COALESCE(("substring"((v.content_details ->> 'duration'::text), 'PT(\d+)H.*'::text))::integer, 0) * 60) + COALESCE(("substring"((v.content_details ->> 'duration'::text), 'PT.*?(\d+)M.*'::text))::integer, 0)) AS duration,
     (((v.statistics ->> 'likeCount'::text))::double precision / ((((v.statistics ->> 'likeCount'::text))::integer + ((v.statistics ->> 'dislikeCount'::text))::integer))::double precision) AS like_perc,
     ( SELECT array_agg(vt.tag_name) AS array_agg
            FROM public.video_tags vt
@@ -320,6 +320,27 @@ CREATE INDEX idx_video_tags_tag ON public.video_tags USING btree (tag_name);
 --
 
 CREATE INDEX idx_video_tags_video ON public.video_tags USING btree (video_id);
+
+
+--
+-- Name: idx_vv_duration; Type: INDEX; Schema: public;
+--
+
+CREATE INDEX idx_vv_duration ON public.videos_view USING btree (duration);
+
+
+--
+-- Name: idx_vv_like_perc; Type: INDEX; Schema: public;
+--
+
+CREATE INDEX idx_vv_like_perc ON public.videos_view USING btree (like_perc);
+
+
+--
+-- Name: idx_vv_tags; Type: INDEX; Schema: public;
+--
+
+CREATE INDEX idx_vv_tags ON public.videos_view USING btree (tags);
 
 
 --
