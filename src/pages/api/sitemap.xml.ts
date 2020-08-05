@@ -1,12 +1,10 @@
 // Import built-in types for API routes
 import { NextApiRequest, NextApiResponse } from 'next';
-import { EnumChangefreq, SitemapStream, streamToPromise } from 'sitemap';
+import { EnumChangefreq, SitemapStream } from 'sitemap';
 import { createGzip } from 'zlib';
 import { TIME_INTERVALS } from '../../lib/constants';
 import { fetchApiData } from '../../lib/fetchApiData';
 import { buildUrl } from '../../lib/utils';
-
-let cache;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (!res) return {};
@@ -14,10 +12,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // Set response header
     res.setHeader('content-type', 'application/xml');
     res.setHeader('Content-Encoding', 'gzip');
-    if (cache) {
-      res.send(cache);
-      return;
-    }
 
     const smStream = new SitemapStream({
       hostname: 'https://www.dosome.yoga',
@@ -42,14 +36,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     // cache the response
     // streamToPromise
-    streamToPromise(pipeline).then(sm => {
-      cache = sm;
-      res.send(cache);
-    });
-    // stream the response
-    // pipeline.pipe(res).on('error', (e) => {
-    //   throw e;
+    // streamToPromise(pipeline).then(sm => {
+    //   res.send(sm);
     // });
+    // stream the response
+    pipeline.pipe(res).on('error', (e) => {
+      throw e;
+    });
   } catch (e) {
     res.status(500).end();
   }

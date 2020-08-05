@@ -1,4 +1,4 @@
-import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 type HttpMethod = 'get' | 'post' | 'delete';
 
@@ -19,12 +19,23 @@ export class AppError extends Error {
   }
 }
 
-export default (key: string, handlers: Partial<{ [method in HttpMethod]: NextApiHandler }>) => {
+export default (
+  key: string,
+  { ttl }: { ttl?: number },
+  handlers: Partial<{ [method in HttpMethod]: (req: NextApiRequest) => any }>,
+) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const meth = req.method.toLowerCase();
     try {
-      if (meth in handlers) await handlers[meth](req, res);
-      else error(res, 404);
+      if (meth in handlers) {
+        const result = await handlers[meth](req, res);
+        if (ttl) res.setHeader('Cache-Control', `no-cache, max-age=${ttl}`);
+        res.statusCode = 200;
+        if (result) res.json(result);
+        else res.end();
+      } else {
+        error(res, 404);
+      }
     } catch (e) {
       console.error(req.method, key, e.message, e.stack);
       if (e instanceof AppError) {
