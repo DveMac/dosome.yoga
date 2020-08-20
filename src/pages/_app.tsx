@@ -18,11 +18,7 @@ export default function MyApp({ Component, pageProps }) {
     <ThemeProvider theme={customTheme}>
       <CSSReset />
 
-      <Box
-        width={[
-          '100%', // base
-        ]}
-      >
+      <Box width={['100%']}>
         <Component {...pageProps} />
 
         <ContentBox>
@@ -32,8 +28,11 @@ export default function MyApp({ Component, pageProps }) {
               <a href="https://twitter.com/dosome_yoga" target="_blank" rel="noopener noreferrer">
                 @dosome_yoga
               </a>{' '}
-              | Contribute on <a href="https://github.com/DveMac/dosome.yoga">GitHub</a> | Made in 2020, an incredibly
-              strange year.
+              | Contribute on{' '}
+              <a target="_blank" rel="noopener noreferrer" href="https://github.com/DveMac/dosome.yoga">
+                GitHub
+              </a>{' '}
+              | Made in 2020, an incredibly strange year.
             </small>
           </footer>
         </ContentBox>

@@ -12,11 +12,10 @@ import {
   PopoverTrigger,
   SimpleGrid,
   Stack,
-  useToast,
 } from '@chakra-ui/core';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import * as icons from 'react-icons/fi';
 import { FiFrown, FiMeh, FiSmile } from 'react-icons/fi';
 import YouTube, { Options } from 'react-youtube';
@@ -26,15 +25,14 @@ import { ContentBox } from '../../components/ContentBox';
 import Header from '../../components/Header';
 import { H3 } from '../../components/Headings';
 import { TagLinksList } from '../../components/TagList';
-import { VideoCard } from '../../components/VideoCard';
 import { APP_NAME, HALF_PADDING } from '../../lib/constants';
 import { fetchApiData } from '../../lib/fetchApiData';
-import reducer, { Card, initState, State } from '../../lib/practice.logic';
+import reducer, { State } from '../../lib/player.logic';
 import { useInterval } from '../../lib/useInterval';
+import { sendEvent } from '../../lib/utils';
 
-type PlanPageProps = {
-  id: string;
-  videos: Video[];
+type PlayerPageProps = {
+  video: Video;
 };
 
 // -1 (unstarted)
@@ -44,7 +42,9 @@ type PlanPageProps = {
 // 3 (buffering)
 // 5 (video cued).
 
-const VideoReviewCard = ({ onRestartClick, onNext }) => {
+type Step = 'review' | 'done' | 'skipped' | 'video';
+
+const VideoReviewStep = ({ onRestartClick, onNext }) => {
   const rate = (event) => {
     const val = Number(event.currentTarget.dataset.value);
     onNext(val);
@@ -111,7 +111,7 @@ const VideoReviewCard = ({ onRestartClick, onNext }) => {
   );
 };
 
-const DoneCard = ({ onNext }) => {
+const DoneStep = ({ onNext }) => {
   const router = useRouter();
   return (
     <Flex flexWrap="wrap" backgroundColor="gray" height="100%" paddingTop="10px">
@@ -127,7 +127,7 @@ const DoneCard = ({ onNext }) => {
   );
 };
 
-const SkipVideoCard = ({ video, onRestartClick, onNext }) => {
+const SkipVideoStep = ({ video, onContinue, onNext }) => {
   const rate = (event) => {
     const val = Number(event.target.dataset.value);
     onNext(val);
@@ -162,8 +162,8 @@ const SkipVideoCard = ({ video, onRestartClick, onNext }) => {
               </Button>
             </Stack>
             <Divider />
-            <Button leftIcon={icons.FiArrowLeft} onClick={onRestartClick}>
-              Continue Session
+            <Button leftIcon={icons.FiArrowLeft} onClick={onContinue}>
+              Continue Video
             </Button>
           </Box>
         </Flex>
@@ -172,32 +172,9 @@ const SkipVideoCard = ({ video, onRestartClick, onNext }) => {
   );
 };
 
-const VideoPicker = ({ choices, onSelectVideo }) => {
-  const selectVideo = (event) => {
-    // <a href={`https://youtu.be/${video.videoId}`} rel="noreferrer" target="_blank">
-    //
-    onSelectVideo(event.currentTarget.dataset.value);
-  };
-  return (
-    <Box>
-      <H3 text="Pick a session for today" />
-
-      <SimpleGrid spacing="10" columns={[1, 1, 3, 3]}>
-        {choices.map((vc) => (
-          <VideoCard key={vc.videoId} onClick={selectVideo} video={vc} />
-        ))}
-      </SimpleGrid>
-    </Box>
-  );
-};
-
 const initialState: State = {
   playerState: -1,
-  isLastVideo: false,
-  videos: [],
-  visibleCard: 'picker',
-  completed: [],
-  choices: [],
+  currentVideo: undefined,
 };
 
 const youtubePlayerOptions: Options = {
@@ -206,40 +183,35 @@ const youtubePlayerOptions: Options = {
   playerVars: { controls: 1, autoplay: 1, modestbranding: 1, enablejsapi: 1 },
 };
 
-const PracticePage: React.FC<PlanPageProps> = ({ videos, id }) => {
-  const toast = useToast();
-  const router = useRouter();
-  const [{ player, playerState, visibleCard, isLastVideo, currentVideo, choices, completed }, dispatch] = useReducer(
-    reducer,
-    { ...initialState, id, videos },
-    initState,
-  );
+const PlayerPage: React.FC<PlayerPageProps> = ({ video }) => {
+  const [currentStep, setCurrentStep] = useState<Step>('video');
+  const [{ player, playerState, currentVideo, hitWatchThreshold }, dispatch] = useReducer(reducer, {
+    ...initialState,
+    currentVideo: video,
+  });
 
-  const hasFinishedWatching = currentVideo ? completed.indexOf(currentVideo.videoId) >= 0 : false;
   const onReady = ({ target }) => dispatch({ type: 'SET_PLAYER', payload: target });
   const onStateChange = (event) => dispatch({ type: 'SET_PLAYER_STATE', payload: event.data });
-  const selectVideo = (videoId: string) => dispatch({ type: 'SELECT_VIDEO', payload: videoId });
-  const skip = () => dispatch({ type: 'SKIP' });
-  const playPause = (from?: number) => dispatch({ type: 'PLAY_PAUSE', payload: from });
+  const skip = () => {
+    dispatch({ type: 'SKIP' });
+    setCurrentStep(hitWatchThreshold ? 'review' : 'skipped');
+  };
+  const playPause = (from?: number) => {
+    dispatch({ type: 'PLAY_PAUSE', payload: from });
+    setCurrentStep('video');
+  };
   const seek = (amount = 15) => dispatch({ type: 'SEEK', payload: amount });
   const refreshVideoPlayPosition = () => dispatch({ type: 'VIDEO_TICK' });
-  const finishSession = (rate: number, videoId: string, nextCard: Card) =>
-    dispatch({ type: 'FINISH_SESSION', payload: { rate, videoId, nextCard } });
+  const finishVideo = (videoId: string, rate: number | null, nextStep: Step | null) => {
+    dispatch({ type: 'FINISH_VIDEO', payload: { rate, videoId } });
+    setCurrentStep(nextStep);
+  };
 
   useInterval(refreshVideoPlayPosition, 1000);
 
   useEffect(() => {
-    if (router.asPath.indexOf('#new') > 0) {
-      toast({
-        title: 'Practice Created',
-        description: "Your new practice has been created - let's do some yoga!",
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-      router.push(router.asPath.replace('#new', ''));
-    }
-  }, [router.asPath]);
+    sendEvent(video.videoId, { rate: 100, position: 0, key: '-' });
+  }, [video.videoId]);
 
   return (
     <main>
@@ -251,7 +223,7 @@ const PracticePage: React.FC<PlanPageProps> = ({ videos, id }) => {
       <ContentBox>
         <ClientOnly>
           {currentVideo && (
-            <Box hidden={visibleCard !== 'video'}>
+            <Box hidden={currentStep !== 'video'}>
               <YouTube
                 containerClassName={'youtube-container'}
                 videoId={currentVideo.videoId}
@@ -267,7 +239,7 @@ const PracticePage: React.FC<PlanPageProps> = ({ videos, id }) => {
                 <Button isDisabled={[3].includes(playerState) || !player} onClick={() => playPause()}>
                   {playerState === 1 ? 'Pause' : 'Play'}
                 </Button>
-                {!isLastVideo && <Button onClick={skip}>{hasFinishedWatching ? 'Done' : 'Skip'}</Button>}
+                <Button onClick={skip}>{hitWatchThreshold ? 'Done' : 'Skip'}</Button>
 
                 <Button isDisabled={!player} onClick={() => seek(15)}>
                   +15
@@ -283,30 +255,23 @@ const PracticePage: React.FC<PlanPageProps> = ({ videos, id }) => {
           )}
           {
             {
-              picker: <VideoPicker choices={choices} onSelectVideo={selectVideo} />,
+              skipped: (
+                <SkipVideoStep
+                  video={currentVideo}
+                  onContinue={() => playPause()}
+                  onNext={(rate) => finishVideo(currentVideo.videoId, rate, null)}
+                />
+              ),
               review: (
-                <VideoReviewCard
+                <VideoReviewStep
                   onRestartClick={() => playPause(0)}
                   onNext={(rate) => {
-                    finishSession(rate, currentVideo.videoId, 'complete2');
+                    finishVideo(currentVideo.videoId, rate, 'done');
                   }}
                 />
               ),
-              skipped: (
-                <SkipVideoCard
-                  video={currentVideo}
-                  onRestartClick={() => playPause()}
-                  onNext={(rate) => finishSession(rate, currentVideo.videoId, 'picker')}
-                />
-              ),
-              complete2: (
-                <DoneCard
-                  onNext={() => {
-                    finishSession(null, currentVideo.videoId, 'picker');
-                  }}
-                />
-              ),
-            }[visibleCard]
+              done: <DoneStep onNext={() => finishVideo(currentVideo.videoId, null, null)} />,
+            }[currentStep]
           }
         </ClientOnly>
       </ContentBox>
@@ -314,10 +279,10 @@ const PracticePage: React.FC<PlanPageProps> = ({ videos, id }) => {
   );
 };
 
-export const getServerSideProps = async ({ req, params }): Promise<{ props: PlanPageProps | {} }> => {
+export const getServerSideProps = async ({ req, params }): Promise<{ props: PlayerPageProps | {} }> => {
   const { key } = params;
-  const videos = await fetchApiData(req, `practices/${key}/playlist`);
-  return { props: { videos, id: key } };
+  const video = await fetchApiData(req, `videos/${key}`);
+  return { props: { video } };
 };
 
-export default PracticePage;
+export default PlayerPage;

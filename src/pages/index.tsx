@@ -1,31 +1,19 @@
-import { Box, Text } from '@chakra-ui/core';
-import { IncomingMessage } from 'http';
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import { Box, Button, Text } from '@chakra-ui/core';
+import Link from 'next/link';
+import React from 'react';
 import { Tag } from '../../types';
 import { ContentBox } from '../components/ContentBox';
 import Header from '../components/Header';
 import { H3 } from '../components/Headings';
 import { MetaHead } from '../components/MetaHead';
-import NewPracticeForm from '../components/NewPracticeForm';
 import { MAIN_PADDING } from '../lib/constants';
-import { fetchApiData } from '../lib/fetchApiData';
-import { useLocalStorage } from '../lib/useLocalStorage';
 
 type HomePageProps = {
   referrer: string;
   tags: Tag[];
 };
 
-const Home: React.FC<HomePageProps> = ({ referrer, tags }) => {
-  const [practices] = useLocalStorage('practices', []);
-  const router = useRouter();
-  const hasPractices = practices.length > 0;
-
-  useEffect(() => {
-    if (hasPractices && document.location.href === referrer) router.push('/practice');
-  }, []);
-
+const Home: React.FC<HomePageProps> = () => {
   return (
     <main>
       <MetaHead suffix="Free Yoga for Everyone" />
@@ -50,7 +38,9 @@ const Home: React.FC<HomePageProps> = ({ referrer, tags }) => {
       </Box>
 
       <ContentBox>
-        <NewPracticeForm tags={tags} />
+        <Link href="/practice">
+          <Button size="lg">Let's go!</Button>
+        </Link>
       </ContentBox>
 
       <div style={{ width: '100%', backgroundColor: '#515e64', color: 'white' }}>
@@ -74,11 +64,6 @@ const Home: React.FC<HomePageProps> = ({ referrer, tags }) => {
       </div>
     </main>
   );
-};
-
-export const getServerSideProps = async ({ req }: { req: IncomingMessage }): Promise<{ props: HomePageProps | {} }> => {
-  const [tags] = await Promise.all([fetchApiData(req, `tags`)]);
-  return { props: { referrer: req.headers.referer || null, tags } };
 };
 
 export default Home;

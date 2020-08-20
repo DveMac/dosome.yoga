@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { Filters, Video } from '../../types';
 import { VideoCard } from './VideoCard';
 
@@ -6,9 +7,10 @@ type VideoCardListProps = {
   query: Filters;
 };
 export const VideoCardList: React.FC<VideoCardListProps> = ({ items, query }) => {
+  const router = useRouter();
   const gotoVideo = (event) => {
     const { value } = event.currentTarget.dataset;
-    window.open(`https://youtu.be/${value}`, '_blank', 'noopener noreferrer');
+    router.push('/play/[key]', `/play/${value}`);
   };
   return (
     <>

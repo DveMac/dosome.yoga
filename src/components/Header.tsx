@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Icon, Stack } from '@chakra-ui/core';
 import Link from 'next/link';
 import React from 'react';
-import { FiBookOpen, FiSettings } from 'react-icons/fi';
+import { FiSettings } from 'react-icons/fi';
 import { APP_NAME } from '../lib/constants';
 import { ContentBox } from './ContentBox';
 
@@ -24,15 +24,8 @@ const Header: React.FC = ({}) => {
 
           <Flex>
             <Box marginRight={[4, 6, 8]}>
-              <Link href="/practice">
-                <a aria-label="My Practices">My Practices</a>
-              </Link>
-            </Box>
-            <Box marginRight={[4, 6, 8]}>
               <Link href="/15-minute-yoga" prefetch={false}>
-                <a aria-label="Explore">
-                  <Icon as={FiBookOpen} size="5" />
-                </a>
+                <a aria-label="Explore">Explore</a>
               </Link>
             </Box>
             <Box>
