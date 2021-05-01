@@ -1,11 +1,4 @@
 {
-  "env": {
-    "DB_HOST": "@dbhost",
-    "DB_PASSWORD": "@dbpassword",
-    "DB_USERNAME": "@dbuser",
-    "DB_PORT": "@dbport",
-    "DB_DATABASE": "@dbname"
-  },
   "routes": [
     {
       "src": "/.*",
