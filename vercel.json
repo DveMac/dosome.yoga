@@ -3,10 +3,7 @@
     {
       "source": "/.*",
       "headers": [
-        {
-          "key": "Content-Security-Policy",
-          "value": "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; default-src 'self'; img-src 'self' https://i.ytimg.com https://*.goatcounter.com; script-src 'unsafe-eval' 'self' https://gc.zgo.at http://www.youtube.com/ https://s.ytimg.com/yts/jsbin/; frame-src 'self' https://www.youtube-nocookie.com"
-        },
+
         {
           "key" : "X-Content-Type-Options",
           "value" : "nosniff"
