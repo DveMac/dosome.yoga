@@ -1,5 +1,6 @@
 # dosome.yoga 🧘‍
-
+ 
+ 
 A low friction, open-source yoga planner aimed at removing a barrier to practicing yoga everyday. It generates yoga "practices" based on a user selected set of tags and time span.
 
 The production app is available at [https://www.dosome.yoga](https://www.dosome.yoga)
